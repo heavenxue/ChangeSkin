@@ -1,4 +1,4 @@
-package com.lixue.aibei.changeskin;
+package com.lixue.aibei.plugin;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

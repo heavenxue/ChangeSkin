@@ -1,4 +1,4 @@
-package com.lixue.aibei.changeskin;
+package com.lixue.aibei.plugin;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
