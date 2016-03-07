@@ -41,7 +41,6 @@ public class MainActivity extends BaseSkinActivity {
         setContentView(R.layout.activity_main);
         initView();
         initEvents();
-
     }
 
 
@@ -121,7 +120,7 @@ public class MainActivity extends BaseSkinActivity {
 
         switch (id) {
             case R.id.id_action_plugin_skinchange:
-                SkinManager.getInstance().changeSkin(mSkinPkgPath, "com.lixue.aibei.plugin", new ISkinChangingCallback() {
+                SkinManager.getInstance().changeSkin(mSkinPkgPath, "com.zhy.plugin", new ISkinChangingCallback() {
                     @Override
                     public void onStart() {
                     }
@@ -152,7 +151,7 @@ public class MainActivity extends BaseSkinActivity {
                     Resources superRes = getResources();
                     Resources mResources = new Resources(assetManager, superRes.getDisplayMetrics(), superRes.getConfiguration());
 
-                    int mainBgId = mResources.getIdentifier("skin_main_bg", "drawable", "com.lixue.aibei.plugin");
+                    int mainBgId = mResources.getIdentifier("skin_main_bg", "drawable", "com.zhy.plugin");
                     findViewById(R.id.id_drawerLayout).setBackgroundDrawable(mResources.getDrawable(mainBgId));
 
 

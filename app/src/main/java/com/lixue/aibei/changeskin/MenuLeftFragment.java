@@ -54,12 +54,12 @@ public class MenuLeftFragment extends Fragment implements View.OnClickListener {
 
                     @Override
                     public void onError(Exception e) {
-                        Toast.makeText(getActivity(), "����ʧ��", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "换肤失败", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onComplete() {
-                        Toast.makeText(getActivity(), "�����ɹ�", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "换肤成功", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

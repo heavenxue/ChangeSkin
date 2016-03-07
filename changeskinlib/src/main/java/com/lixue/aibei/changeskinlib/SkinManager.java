@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import com.lixue.aibei.changeskinlib.attr.SkinView;
 import com.lixue.aibei.changeskinlib.callback.ISkinChangedListener;
 import com.lixue.aibei.changeskinlib.callback.ISkinChangingCallback;
+import com.lixue.aibei.changeskinlib.utils.L;
 import com.lixue.aibei.changeskinlib.utils.PrefUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -65,13 +66,16 @@ public class SkinManager {
     /**加载插件**/
     public void loadPlugin(String pluginPath,String pkgName,String suffix){
         try {
+            //将一个apk中的资源加载到Resources中
             AssetManager assetManager = AssetManager.class.newInstance();
-            Method addAssetPath = assetManager.getClass().getMethod("addAssetPath",String.class);
+            Method addAssetPath = assetManager.getClass().getMethod("addAssetPath", String.class);
             addAssetPath.invoke(assetManager,pluginPath);
 
             Resources superRes = mContext.getResources();
             mResources = new Resources(assetManager,superRes.getDisplayMetrics(),superRes.getConfiguration());
+            L.e("插件中的Resources:"+mResources.toString());
             mResourceManager = new ResourceManager(mResources,pkgName,suffix);
+            L.e("ResourceManager:"+mResourceManager.toString());
             usePlugin = true;
         } catch (InstantiationException e) {
             e.printStackTrace();
@@ -182,7 +186,6 @@ public class SkinManager {
                     e.printStackTrace();
                     skinChangingCallback.onError(e);
                 }
-
                 return null;
             }
 

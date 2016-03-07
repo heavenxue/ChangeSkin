@@ -4,6 +4,7 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lixue.aibei.changeskinlib.ResourceManager;
@@ -34,6 +35,16 @@ public enum SkinAttrType {
             if (drawable == null) return;
             ((ImageView) view).setImageDrawable(drawable);
         }
+    },DIVIDER("divider")
+    {
+        @Override
+        public void apply(View view, String resName) {
+        if (view instanceof ListView) {
+            Drawable divider = getResourceManager().getDrawableByName(resName);
+            if (divider == null) return;
+            ((ListView) view).setDivider(divider);
+        }
+    }
     };
     private String attrType;
     SkinAttrType(String attrType){
@@ -46,5 +57,6 @@ public enum SkinAttrType {
 
     public ResourceManager getResourceManager() {
         return SkinManager.getInstance().getResourceManager();
+
     }
 }

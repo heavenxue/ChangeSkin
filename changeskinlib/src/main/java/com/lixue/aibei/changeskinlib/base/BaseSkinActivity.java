@@ -41,7 +41,7 @@ public class BaseSkinActivity extends AppCompatActivity implements ISkinChangedL
 
     @Override
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
-        LayoutInflater layoutInflater = getLayoutInflater();
+//        LayoutInflater layoutInflater = getLayoutInflater();
         AppCompatDelegate delegate = getDelegate();
         View view = null;
         try{
@@ -52,8 +52,8 @@ public class BaseSkinActivity extends AppCompatActivity implements ISkinChangedL
             Object obj = sCreateViewMethod.invoke(delegate,parent,name,context,attrs);
             view = (View) obj;
 
-        }catch (NoSuchMethodException  e){
-
+        }catch (NoSuchMethodException e){
+            e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -124,7 +124,7 @@ public class BaseSkinActivity extends AppCompatActivity implements ISkinChangedL
                 // Class not found in the cache, see if it's real, and try to add it
                 Class<? extends View> clazz = context.getClassLoader().loadClass(
                         prefix != null ? (prefix + name) : name).asSubclass(View.class);
-
+                /**根据构造函数的参数，返回一个具体的具有public属性的构造函数**/
                 constructor = clazz.getConstructor(sConstructorSignature);
                 sConstructorMap.put(name, constructor);
             }
