@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.lixue.aibei.changeskinlib.ResourceManager;
 import com.lixue.aibei.changeskinlib.SkinManager;
+import com.lixue.aibei.changeskinlib.utils.L;
 
 /**
  * Created by Administrator on 2016/2/25.
@@ -17,6 +18,7 @@ public enum SkinAttrType {
     BACKGROUND("background") {
         @Override
         public void apply(View view, String resName) {
+            L.e("background,resName:" + resName);
             Drawable drawable = getResourceManager().getDrawableByName(resName);
             if (drawable == null) return;
             view.setBackgroundDrawable(drawable);
@@ -24,6 +26,7 @@ public enum SkinAttrType {
     },COLOR("textColor"){
         @Override
         public void apply(View view, String resName) {
+            L.e("textColor,resName:" + resName);
             ColorStateList colorlist = getResourceManager().getColorStateList(resName);
             if (colorlist == null) return;
             ((TextView) view).setTextColor(colorlist);
@@ -31,6 +34,7 @@ public enum SkinAttrType {
     },SRC("src"){
         @Override
         public void apply(View view, String resName) {
+            L.e("src,resName:" + resName);
             Drawable drawable = getResourceManager().getDrawableByName(resName);
             if (drawable == null) return;
             ((ImageView) view).setImageDrawable(drawable);
@@ -40,6 +44,7 @@ public enum SkinAttrType {
         @Override
         public void apply(View view, String resName) {
         if (view instanceof ListView) {
+            L.e("divider,resName:" + resName);
             Drawable divider = getResourceManager().getDrawableByName(resName);
             if (divider == null) return;
             ((ListView) view).setDivider(divider);
