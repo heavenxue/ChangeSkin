@@ -3,6 +3,7 @@ package com.lixue.aibei.changeskinlib.attr;
 import android.view.View;
 
 /**
+ * 皮肤属性
  * Created by Administrator on 2016/2/25.
  */
 public class SkinAttr {

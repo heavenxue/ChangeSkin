@@ -1,6 +1,7 @@
 package com.lixue.aibei.changeskinlib.attr;
 
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,10 +21,18 @@ public enum SkinAttrType {
         public void apply(View view, String resName) {
             L.e("background,resName:" + resName);
             Drawable drawable = getResourceManager().getDrawableByName(resName);
-            if (drawable == null) return;
-            view.setBackgroundDrawable(drawable);
+            if (drawable != null) {
+                view.setBackgroundDrawable(drawable);
+            } else {
+                try {
+                    int color = getResourceManager().getColor(resName);
+                    view.setBackgroundColor(color);
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-    },COLOR("textColor"){
+    }, COLOR("textColor") {
         @Override
         public void apply(View view, String resName) {
             L.e("textColor,resName:" + resName);
@@ -31,7 +40,7 @@ public enum SkinAttrType {
             if (colorlist == null) return;
             ((TextView) view).setTextColor(colorlist);
         }
-    },SRC("src"){
+    }, SRC("src") {
         @Override
         public void apply(View view, String resName) {
             L.e("src,resName:" + resName);
@@ -39,25 +48,27 @@ public enum SkinAttrType {
             if (drawable == null) return;
             ((ImageView) view).setImageDrawable(drawable);
         }
-    },DIVIDER("divider")
-    {
+    }, DIVIDER("divider") {
         @Override
         public void apply(View view, String resName) {
-        if (view instanceof ListView) {
-            L.e("divider,resName:" + resName);
-            Drawable divider = getResourceManager().getDrawableByName(resName);
-            if (divider == null) return;
-            ((ListView) view).setDivider(divider);
+            if (view instanceof ListView) {
+                L.e("divider,resName:" + resName);
+                Drawable divider = getResourceManager().getDrawableByName(resName);
+                if (divider == null) return;
+                ((ListView) view).setDivider(divider);
+            }
         }
-    }
     };
     private String attrType;
-    SkinAttrType(String attrType){
+
+    SkinAttrType(String attrType) {
         this.attrType = attrType;
     }
-    public String getAttrType(){
+
+    public String getAttrType() {
         return attrType;
     }
+
     public abstract void apply(View view, String resName);
 
     public ResourceManager getResourceManager() {
