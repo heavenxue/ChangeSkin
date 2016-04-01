@@ -11,6 +11,7 @@
         android:layout_height="42dp"
         android:layout_centerVertical="true"
         android:layout_marginRight="8dp"
+        android:tag="skin:skin_left_menu_icon:src"
         android:src="@drawable/skin_left_menu_icon"/>
 
     <TextView android:id="@+id/id_tv_title"

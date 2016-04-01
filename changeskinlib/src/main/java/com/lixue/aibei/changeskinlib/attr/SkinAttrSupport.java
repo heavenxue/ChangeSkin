@@ -1,14 +1,12 @@
 package com.lixue.aibei.changeskinlib.attr;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.AttributeSet;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lixue.aibei.changeskinlib.R;
 import com.lixue.aibei.changeskinlib.constant.SkinConfig;
-import com.lixue.aibei.changeskinlib.utils.L;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +37,17 @@ public class SkinAttrSupport {
     /**换肤视图累加到list中**/
     public static void addSkinViews(View view,List<SkinView> skinViews){
         SkinView skinView = getSkinView(view);
+        if (skinView != null) skinViews.add(skinView);
+
+        if (view instanceof ViewGroup) {
+            ViewGroup container = (ViewGroup) view;
+
+            for (int i = 0, n = container.getChildCount(); i < n; i++) {
+                View child = container.getChildAt(i);
+                addSkinViews(child, skinViews);
+            }
+        }
+
     }
 
     /**获取换肤视图**/
@@ -47,27 +56,48 @@ public class SkinAttrSupport {
         if (tag == null){
             tag = view.getTag();
         }
+        if(tag == null) return null;
+        if (!(tag instanceof String)) return  null;
+        String tagStr = (String)tag;
+        List<SkinAttr> skinAttrs = parseTag(tagStr);
+        if (!skinAttrs.isEmpty()) {
+            changeViewTag(view);
+            return new SkinView(view, skinAttrs);
+        }
         return null;
     }
 
-    public static List<SkinAttr> getSkinAttrs(AttributeSet attrs,Context context){
-        List<SkinAttr> skinAttrs = new ArrayList<>();
-        SkinAttr skinAttr = null;
-        for(int i = 0 ;i < attrs.getAttributeCount();i++){
-            String attrName = attrs.getAttributeName(i);
-            String attrValue = attrs.getAttributeValue(i);
-            SkinAttrType skinAttrType = getSupportAttrType(attrName);
-            if (skinAttrType == null) continue;
-            if (attrValue.startsWith("@")){
-                int id = Integer.parseInt(attrValue.substring(1));
-                String entryName = context.getResources().getResourceEntryName(id);
-                L.e("entryName = " + entryName);
-                if (entryName.startsWith(SkinConfig.ATTR_PREFIX)){
-                    skinAttr = new SkinAttr(skinAttrType,entryName);
-                    skinAttrs.add(skinAttr);
-                }
-            }
+    /**skin:left_menu_icon:src|skin:color_red:textColor**/
+    private static List<SkinAttr> parseTag(String tagStr) {
+        List<SkinAttr> skinAttrs = new ArrayList<SkinAttr>();
+        if (TextUtils.isEmpty(tagStr)) return skinAttrs;
+
+        String[] items = tagStr.split("[|]");
+        for (String item : items) {
+            if (!item.startsWith(SkinConfig.SKIN_PREFIX))
+                continue;
+            String[] resItems = item.split(":");
+            if (resItems.length != 3)
+                continue;
+
+            String resName = resItems[1];
+            String resType = resItems[2];
+
+            SkinAttrType attrType = getSupportAttrType(resType);
+            if (attrType == null) continue;
+            SkinAttr attr = new SkinAttr(attrType, resName);
+            skinAttrs.add(attr);
         }
         return skinAttrs;
+    }
+
+    /**设置view的tag，指定一个id的tag**/
+    private static void changeViewTag(View view){
+        Object tag = view.getTag(R.id.skin_tag_id);
+        if (tag == null) {
+            tag = view.getTag();
+            view.setTag(R.id.skin_tag_id, tag);
+            view.setTag(null);
+        }
     }
 }

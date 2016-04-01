@@ -1,23 +1,27 @@
 package com.lixue.aibei.changeskinlib;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.text.TextUtils;
+import android.view.View;
 
+import com.lixue.aibei.changeskinlib.attr.SkinAttrSupport;
 import com.lixue.aibei.changeskinlib.attr.SkinView;
-import com.lixue.aibei.changeskinlib.callback.ISkinChangedListener;
 import com.lixue.aibei.changeskinlib.callback.ISkinChangingCallback;
 import com.lixue.aibei.changeskinlib.utils.L;
 import com.lixue.aibei.changeskinlib.utils.PrefUtils;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.IllegalFormatException;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2016/2/25.
@@ -37,9 +41,7 @@ public class SkinManager {
     private String mCurPluginPkg;
 
 
-    private Map<ISkinChangedListener, List<SkinView>> mSkinViewMaps = new HashMap<ISkinChangedListener, List<SkinView>>();
-    private List<ISkinChangedListener> mSkinChangedListeners = new ArrayList<ISkinChangedListener>();
-
+    private List<Activity> mActivities = new ArrayList<Activity>();
     private static final SkinManager instance = new SkinManager();
     private SkinManager(){}
     public synchronized static SkinManager getInstance(){
@@ -92,7 +94,19 @@ public class SkinManager {
         if (TextUtils.isEmpty(skinPath) || TextUtils.isEmpty(skinPkgName)) {
             return false;
         }
+        File file = new File(skinPath);
+        if (!file.exists())
+            return false;
+
+        PackageInfo info = getPackageInfo(skinPath);
+        if (!info.packageName.equals(skinPkgName))
+            return false;
         return true;
+    }
+
+    private PackageInfo getPackageInfo(String skinPluginPath) {
+        PackageManager pm = mContext.getPackageManager();
+        return pm.getPackageArchiveInfo(skinPluginPath, PackageManager.GET_ACTIVITIES);
     }
 
     private void checkPluginParamsThrow(String skinPath,String pkgName){
@@ -101,6 +115,7 @@ public class SkinManager {
         }
     }
     public void removeAnySkin(){
+        L.e("removeAnySkin");
         clearPluginInfo();
         notifyChangedListeners();
     }
@@ -117,7 +132,7 @@ public class SkinManager {
     }
 
     /**
-     * 换肤
+     *  应用内换肤，传入资源区别的后缀
      *
      * @param stuffix
      */
@@ -135,12 +150,6 @@ public class SkinManager {
         usePlugin = false;
         if (mPrefUtils != null) mPrefUtils.clear();
 
-    }
-
-    private void notifyChangedListeners(){
-        for (ISkinChangedListener listener : mSkinChangedListeners) {
-            listener.onSkinChanged();
-        }
     }
 
     private void updatePluginInfo(String skinPluginPath, String pkgName, String suffix) {
@@ -171,26 +180,31 @@ public class SkinManager {
         final ISkinChangingCallback skinChangingCallback = callback;
 
         skinChangingCallback.onStart();
-        checkPluginParamsThrow(skinPluginPath, pkgName);
-
-        if (skinPluginPath.equals(mCurPluginPath) && pkgName.equals(mCurPluginPkg)) {
+        try{
+            checkPluginParamsThrow(skinPluginPath, pkgName);
+        }catch (IllegalFormatException e){
+            skinChangingCallback.onError(new RuntimeException("checkPlugin occur error"));
             return;
         }
 
-        new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Integer>() {
             @Override
-            protected Void doInBackground(Void... params) {
+            protected Integer doInBackground(Void... params) {
                 try {
                     loadPlugin(skinPluginPath, pkgName, suffix);
+                    return 1;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    skinChangingCallback.onError(e);
+                    return 0;
                 }
-                return null;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
+            protected void onPostExecute(Integer res) {
+                if (res == 0){
+                    skinChangingCallback.onError(new RuntimeException("loadPlugin occur error"));
+                    return;
+                }
                 try {
                     updatePluginInfo(skinPluginPath, pkgName, suffix);
                     notifyChangedListeners();
@@ -205,17 +219,8 @@ public class SkinManager {
     }
 
 
-    public void addSkinView(ISkinChangedListener listener, List<SkinView> skinViews) {
-        mSkinViewMaps.put(listener, skinViews);
-    }
-
-    public List<SkinView> getSkinViews(ISkinChangedListener listener) {
-        return mSkinViewMaps.get(listener);
-    }
-
-
-    public void apply(ISkinChangedListener listener) {
-        List<SkinView> skinViews = getSkinViews(listener);
+    public void apply(Activity activity) {
+        List<SkinView> skinViews = SkinAttrSupport.getSkinViews(activity);
 
         if (skinViews == null) return;
         for (SkinView skinView : skinViews) {
@@ -223,14 +228,38 @@ public class SkinManager {
         }
     }
 
-    public void addChangedListener(ISkinChangedListener listener) {
-        mSkinChangedListeners.add(listener);
+    public void register(final Activity activity) {
+        mActivities.add(activity);
+
+        activity.findViewById(android.R.id.content).post(new Runnable() {
+            @Override
+            public void run() {
+                apply(activity);
+            }
+        });
     }
 
-
-    public void removeChangedListener(ISkinChangedListener listener) {
-        mSkinChangedListeners.remove(listener);
-        mSkinViewMaps.remove(listener);
+    public void unregister(Activity activity) {
+        mActivities.remove(activity);
     }
 
+    public void notifyChangedListeners() {
+
+        for (Activity activity : mActivities) {
+            apply(activity);
+        }
+    }
+
+    /**
+     * apply for dynamic construct view
+     *
+     * @param view
+     */
+    public void injectSkin(View view) {
+        List<SkinView> skinViews = new ArrayList<SkinView>();
+        SkinAttrSupport.addSkinViews(view, skinViews);
+        for (SkinView skinView : skinViews) {
+            skinView.apply();
+        }
+    }
 }

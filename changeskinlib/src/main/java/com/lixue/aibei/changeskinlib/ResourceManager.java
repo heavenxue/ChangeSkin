@@ -25,18 +25,13 @@ public class ResourceManager {
 
     /**通过名字得到drawable**/
     public Drawable getDrawableByName(String name){
-        name = appendstuffix(name);
-        L.e("getDrawableByName(name),name:" + name);
         try{
+            name = appendstuffix(name);
+            L.e("getDrawableByName(name),name:" + name);
             return res.getDrawable(res.getIdentifier(name,DEFTYPE_DRAWABLE,mPackgeName));
         }catch (Resources.NotFoundException e){
-            try{
-                return res.getDrawable(res.getIdentifier(name,DEFTYPE_COLOR,mPackgeName));
-            }catch (Resources.NotFoundException ex){
-                ex.printStackTrace();
-                return null;
-            }
-
+            e.printStackTrace();
+            return null;
         }
     }
     /**通过名字得到color**/

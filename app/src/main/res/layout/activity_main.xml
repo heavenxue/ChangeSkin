@@ -3,13 +3,14 @@
                                         xmlns:tools="http://schemas.android.com/tools"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:background="@drawable/skin_main_bg">
+                                        android:background="@drawable/skin_main_bg"
+                                        android:tag="skin:skin_main_bg:background"
+    >
 
     <ListView
         android:id="@+id/id_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffffff"
         android:padding="16dp"
         >
     </ListView>
