@@ -5,6 +5,7 @@ ChangeSkin
   
 效果图
 ---
+![github](https://github.com/heavenxue/ChangeSkin/raw/master/doc/0.png "github")
 ![github](https://github.com/heavenxue/ChangeSkin/raw/master/doc/1.png "github")
 ![github](https://github.com/heavenxue/ChangeSkin/raw/master/doc/2.png "github")
 ![github](https://github.com/heavenxue/ChangeSkin/raw/master/doc/3.png "github")
