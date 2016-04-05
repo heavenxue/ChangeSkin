@@ -2,74 +2,58 @@
 ChangeSkin
 ==========
   一种完全无侵入的换肤方式，支持插件式和应用内，无需重启Activity.</br>
-
-Idina Menze和Caleb Hyles激情对唱Let It Go：<iframe height=498 width=510 src="http://player.youku.com/embed/XNjcyMDU4Njg0" frameborder=0 allowfullscreen></iframe>
-中标题
------------------------------------
-  中标题一般显示重点项,类似html的\<h2\><br />
-  你只要在标题下面输入------即可
   
-### 小标题
-  小标题类似html的\<h3\><br />
-  小标题的格式如下 ### 小标题<br />
-  注意#和标题字符中间要有空格
+效果图
+---
+![github](https://github.com/heavenxue/ChangeSkin/raw/master/doc/1.png "github")
+![github](https://github.com/heavenxue/ChangeSkin/raw/master/doc/2.png "github")
+![github](https://github.com/heavenxue/ChangeSkin/raw/master/doc/3.png "github")
 
-### 注意!!!下面所有语法的提示我都先用小标题提醒了!!! 
+特点
+---
+  * 插件式换肤
+  * 应用内换肤
+  * 支持插件或者应用内多套皮肤
+  * 支持动态生成addView
+  * 无需重启Activity
+  
+### 注意
+  本demo是将自己生成的应用skin_plugin-debug.apk放在sd卡的根目录上进行测试的\<h3\><br />
 
-### 单行文本框
-    这是一个单行的文本框,只要两个Tab再输入文字即可
-        
-### 多行文本框  
-    这是一个有多行的文本框
-    你可以写入代码等,每行文字只要输入两个Tab再输入文字即可
-    这里你可以输入一段代码
+### 说明
 
-### 比如我们可以在多行文本框里输入一段代码,来一个Java版本的HelloWorld吧
-    public class HelloWorld {
+    tag属性分为3部分组成：
 
-      /**
-      * @param args
-	    */
-	    public static void main(String[] args) {
-		    System.out.println("HelloWorld!");
+    skin
+    资源的名称，即插件包中资源的名称，需要与当前app内使用的资源名称一致。
+    支持的属性，目前支持src,background,textColor,支持扩展。
+    3部分，必须以:分隔拼接。
 
-	    }
+    对于一个View多个属性需要换肤的，android:tag="skin:item_text_color:textColor|skin:icon:src" 同样使用|进行分隔。
 
-    }
-### 链接
-1.[点击这里你可以链接到www.google.com](http://www.google.com)<br />
-2.[点击这里我你可以链接到我的博客](http://guoyunsky.iteye.com)<br />
+    简言之：如果你哪个View需要换肤，就添加tag属性，tag值按照上述方式设置即可。
+    
+### 使用
 
-###只是显示图片
-![github](http://github.com/unicorn.png "github")
-
-###想点击某个图片进入一个网页,比如我想点击github的icorn然后再进入www.github.com
-[![image]](http://www.github.com/)
-[image]: http://github.com/github.png "github"
-
-### 文字被些字符包围
-> 文字被些字符包围
->
-> 只要再文字前面加上>空格即可
->
-> 如果你要换行的话,新起一行,输入>空格即可,后面不接文字
-> 但> 只能放在行首才有效
-
-### 文字被些字符包围,多重包围
-> 文字被些字符包围开始
->
-> > 只要再文字前面加上>空格即可
->
->  > > 如果你要换行的话,新起一行,输入>空格即可,后面不接文字
->
-> > > > 但> 只能放在行首才有效
-
-### 特殊字符处理
-有一些特殊字符如<,#等,只要在特殊字符前面加上转义字符\即可<br />
-你想换行的话其实可以直接用html标签\<br /\>
-
-
-
-* 在行首加点
-行首输入*，空格后输入内容即可
+    插件式：
+    SkinManager.getInstance().changeSkin(mSkinPkgPath, "com.lixue.aibei.skin_plugin", new ISkinChangingCallback() {
+                        @Override
+                        public void onStart() {
+                        }
+    
+                        @Override
+                        public void onError(Exception e) {
+                            Toast.makeText(getActivity(), "换肤失败", Toast.LENGTH_SHORT).show();
+                        }
+    
+                        @Override
+                        public void onComplete() {
+                            Toast.makeText(getActivity(), "换肤成功", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+    应用内：
+    SkinManager.getInstance().changeSkin(suffix);
+    应用内多套皮肤以后缀就行区别，比如：main_bg，皮肤资源可以为：main_bg_red,main_bg_green等。
+    
+    换肤时，直接传入后缀，例如上面描述的red,green。
     
