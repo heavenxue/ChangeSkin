@@ -62,11 +62,10 @@ public class ResourceManager {
 
     /**追加后缀**/
     private String appendstuffix(String str){
-        if (!TextUtils.isEmpty(str)){
-            return str + "_" +striff;
+        if (!TextUtils.isEmpty(striff)){
+            return str + "_" + striff;
         }else{
             return str;
         }
-
     }
 }

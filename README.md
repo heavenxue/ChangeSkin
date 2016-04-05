@@ -1,10 +1,9 @@
 
 ChangeSkin
 ==========
-  大标题一般显示工程名,类似html的\<h1\><br />
-  你只要在标题下面跟上=====即可
+  一种完全无侵入的换肤方式，支持插件式和应用内，无需重启Activity.</br>
 
-  
+Idina Menze和Caleb Hyles激情对唱Let It Go：<iframe height=498 width=510 src="http://player.youku.com/embed/XNjcyMDU4Njg0" frameborder=0 allowfullscreen></iframe>
 中标题
 -----------------------------------
   中标题一般显示重点项,类似html的\<h2\><br />

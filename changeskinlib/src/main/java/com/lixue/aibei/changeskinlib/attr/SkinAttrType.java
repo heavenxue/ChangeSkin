@@ -40,7 +40,7 @@ public enum SkinAttrType {
             if (colorlist == null) return;
             ((TextView) view).setTextColor(colorlist);
         }
-    }, SRC("src") {
+    },SRC("src") {
         @Override
         public void apply(View view, String resName) {
             L.e("src,resName:" + resName);
@@ -48,7 +48,7 @@ public enum SkinAttrType {
             if (drawable == null) return;
             ((ImageView) view).setImageDrawable(drawable);
         }
-    }, DIVIDER("divider") {
+    },DIVIDER("divider") {
         @Override
         public void apply(View view, String resName) {
             if (view instanceof ListView) {
@@ -73,6 +73,5 @@ public enum SkinAttrType {
 
     public ResourceManager getResourceManager() {
         return SkinManager.getInstance().getResourceManager();
-
     }
 }

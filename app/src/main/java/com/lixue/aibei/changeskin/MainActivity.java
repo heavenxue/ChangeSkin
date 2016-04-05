@@ -2,6 +2,7 @@ package com.lixue.aibei.changeskin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -18,15 +19,18 @@ import android.widget.TextView;
 
 import com.lixue.aibei.changeskinlib.SkinManager;
 import com.lixue.aibei.changeskinlib.callback.ISkinChangingCallback;
+import com.lixue.aibei.changeskinlib.utils.L;
 import com.nineoldandroids.view.ViewHelper;
+
+import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ListView mListView;
-//    private String mSkinPkgPath = Environment.getExternalStorageDirectory() + File.separator + "night_plugin.apk";
-    private String mSkinPkgPath = "/storage/emulated/0/night_plugin.apk";
+    private String mSkinPkgPath = Environment.getExternalStorageDirectory() + File.separator + "skin_plugin-debug.apk";
+//    private String mSkinPkgPath = "/storage/emulated/0/night_plugin.apk";
     private String[] mDatas = new String[]{"Activity", "Service", "Activity", "Service", "Activity", "Service", "Activity", "Service"};
     private ArrayAdapter mAdapter ;
 
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initView();
         initEvents();
+        L.e("插件的路径是："+mSkinPkgPath);
     }
 
 
@@ -117,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id) {
             case R.id.id_action_plugin_skinchange:
-                SkinManager.getInstance().changeSkin(mSkinPkgPath, "com.zhy.plugin", new ISkinChangingCallback() {
+                SkinManager.getInstance().changeSkin(mSkinPkgPath, "com.lixue.aibei.skin_plugin", new ISkinChangingCallback() {
                     @Override
                     public void onStart() {
                     }

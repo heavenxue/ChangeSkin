@@ -17,7 +17,7 @@ import java.io.File;
  * Created by Administrator on 2016/2/26.
  */
 public class MenuLeftFragment extends Fragment implements View.OnClickListener {
-    private String mSkinPkgPath = Environment.getExternalStorageDirectory() + File.separator + "night_plugin.apk";
+    private String mSkinPkgPath = Environment.getExternalStorageDirectory() + File.separator + "skin_plugin-debug.apk";
     private View mInnerChange01;
     private View mInnerChange02;
 
@@ -47,7 +47,7 @@ public class MenuLeftFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.id_changeskin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SkinManager.getInstance().changeSkin(mSkinPkgPath, "com.zhy.plugin", new ISkinChangingCallback() {
+                SkinManager.getInstance().changeSkin(mSkinPkgPath, "com.lixue.aibei.skin_plugin", new ISkinChangingCallback() {
                     @Override
                     public void onStart() {
                     }

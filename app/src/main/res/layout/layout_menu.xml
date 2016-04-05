@@ -62,31 +62,6 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/three"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/skin_left_menu_icon"/>
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="20dp"
-                android:layout_toRightOf="@id/three"
-                android:text="第3个Item"
-                android:textColor="@color/skin_left_menu_item_textColor"
-                android:textSize="16sp"/>
-        </RelativeLayout>
-
-
-        <RelativeLayout
             android:id="@+id/id_changeskin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -106,7 +81,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@id/five"
-                android:text="插件式换肤1"
+                android:text="插件式换肤"
                 android:textColor="@color/skin_left_menu_item_textColor"
                 android:textSize="16sp"/>
         </RelativeLayout>

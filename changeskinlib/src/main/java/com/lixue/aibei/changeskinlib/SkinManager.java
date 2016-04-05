@@ -90,6 +90,43 @@ public class SkinManager {
         }
     }
 
+    /**创建Resource对象：**/
+    public Resources getBundleResource(Context context, String apkPath) {
+        AssetManager assetManager = createAssetManager(apkPath);
+        return new Resources(assetManager, context.getResources().getDisplayMetrics(), context.getResources().getConfiguration());
+    }
+
+    /**创建AssetManager**/
+    private AssetManager createAssetManager(String apkPath) {
+        try {
+            AssetManager assetManager = AssetManager.class.newInstance();
+            AssetManager.class.getDeclaredMethod("addAssetPath", String.class).invoke(assetManager, apkPath);
+            return assetManager;
+        } catch (Throwable th) {
+            th.printStackTrace();
+        }
+        return null;
+    }
+
+    public ResourceManager getResourceManager() {
+        if (!usePlugin) {
+            mResourceManager = new ResourceManager(mContext.getResources(), mContext.getPackageName(), mSuffix);
+        }
+        return mResourceManager;
+    }
+
+    public Resources getmResources(){
+     if (!usePlugin){mResources = mContext.getResources();}
+        return mResources;
+    }
+
+    public String getPkgName(){
+        if (!usePlugin){
+            mCurPluginPkg = mContext.getPackageName();
+        }
+        return mCurPluginPkg;
+    }
+
     private boolean checkPluginParams(String skinPath, String skinPkgName) {
         if (TextUtils.isEmpty(skinPath) || TextUtils.isEmpty(skinPkgName)) {
             return false;
@@ -122,13 +159,6 @@ public class SkinManager {
 
     public boolean needChangeSkin(){
         return usePlugin || !TextUtils.isEmpty(mSuffix);
-    }
-
-    public ResourceManager getResourceManager() {
-        if (!usePlugin) {
-            mResourceManager = new ResourceManager(mContext.getResources(), mContext.getPackageName(), mSuffix);
-        }
-        return mResourceManager;
     }
 
     /**
@@ -231,12 +261,12 @@ public class SkinManager {
     public void register(final Activity activity) {
         mActivities.add(activity);
 
-        activity.findViewById(android.R.id.content).post(new Runnable() {
-            @Override
-            public void run() {
-                apply(activity);
-            }
-        });
+//        activity.findViewById(android.R.id.content).post(new Runnable() {
+//            @Override
+//            public void run() {
+//                apply(activity);
+//            }
+//        });
     }
 
     public void unregister(Activity activity) {
